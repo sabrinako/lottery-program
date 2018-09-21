@@ -169,8 +169,9 @@ public class LotteryAlgorithm {
                     classSheet.getRow(0).createCell(2).setCellValue("Last Name");
                     classSheet.getRow(0).createCell(3).setCellValue("First Name");
                     classSheet.getRow(0).createCell(4).setCellValue("Choice #");
-                    classSheet.getRow(0).createCell(5).setCellValue("Priority");
-                    classSheet.getRow(0).createCell(6).setCellValue("Status");
+                    classSheet.getRow(0).createCell(5).setCellValue("Class Total");
+                    classSheet.getRow(0).createCell(6).setCellValue("Priority");
+                    classSheet.getRow(0).createCell(7).setCellValue("Status");
                     
                     classNames[row.getRowNum()-1] = cell.getStringCellValue();
 
@@ -214,8 +215,9 @@ public class LotteryAlgorithm {
             exceptionsSheet.getRow(0).createCell(2).setCellValue("Last Name");
             exceptionsSheet.getRow(0).createCell(3).setCellValue("First Name");
             exceptionsSheet.getRow(0).createCell(4).setCellValue("Choice #");
-            exceptionsSheet.getRow(0).createCell(5).setCellValue("Priority");
-            exceptionsSheet.getRow(0).createCell(6).setCellValue("Class Name");
+            exceptionsSheet.getRow(0).createCell(5).setCellValue("Class Total");
+            exceptionsSheet.getRow(0).createCell(6).setCellValue("Priority");
+            exceptionsSheet.getRow(0).createCell(7).setCellValue("Class Name");
             semWorkbook.close();
 
             //creates the hashmaps that count how many classes someone is in/wants in total
@@ -247,22 +249,6 @@ public class LotteryAlgorithm {
             }
             myWorkBook.close();
 
-            //sets the header values of each class sheet
-           /* for (Sheet classSheet : finalWorkbook) {
-                classSheet.createRow(0);
-                classSheet.getRow(0).createCell(0).setCellValue("Rand #");
-                classSheet.getRow(0).createCell(1).setCellValue("ID #");
-                classSheet.getRow(0).createCell(2).setCellValue("Last Name");
-                classSheet.getRow(0).createCell(3).setCellValue("First Name");
-                classSheet.getRow(0).createCell(4).setCellValue("Choice #");
-                classSheet.getRow(0).createCell(5).setCellValue("Priority");
-                if (classSheet.getSheetName().equals("Exceptions")) {
-                    classSheet.getRow(0).createCell(6).setCellValue("Class Name");
-                } else {
-                    classSheet.getRow(0).createCell(6).setCellValue("Status");
-                }
-            }*/
-
             //make another output workbook that is just all the results together
             XSSFWorkbook finalFullWorkbook = new XSSFWorkbook();
             XSSFSheet finalWBSheet = finalFullWorkbook.createSheet();
@@ -272,9 +258,10 @@ public class LotteryAlgorithm {
             finalWBSheet.getRow(0).createCell(2).setCellValue("Last Name");
             finalWBSheet.getRow(0).createCell(3).setCellValue("First Name");
             finalWBSheet.getRow(0).createCell(4).setCellValue("Choice #");
-            finalWBSheet.getRow(0).createCell(5).setCellValue("Priority");
-            finalWBSheet.getRow(0).createCell(6).setCellValue("Class Name");
-            finalWBSheet.getRow(0).createCell(7).setCellValue("Status");
+            finalWBSheet.getRow(0).createCell(5).setCellValue("Class Total");
+            finalWBSheet.getRow(0).createCell(6).setCellValue("Priority");
+            finalWBSheet.getRow(0).createCell(7).setCellValue("Class Name");
+            finalWBSheet.getRow(0).createCell(8).setCellValue("Status");
 
             //sort the class choices
             Collections.sort(allData, ClassChoice.COMPARE_BY_RANDNUM);
@@ -319,7 +306,6 @@ public class LotteryAlgorithm {
             }
 
             Collections.sort(allData, ClassChoice.COMPARE_BY_STATUS);
-
             //puts the class choices into the class sheets
             for (ClassChoice cc : allData) {
                 try {  
@@ -331,56 +317,58 @@ public class LotteryAlgorithm {
                     myRow.createCell(2).setCellValue(cc.getLastName());
                     myRow.createCell(3).setCellValue(cc.getFirstName());
                     myRow.createCell(4).setCellValue(cc.getChoiceNum());
+                    int[] currentClassCount = hmClassCount.get(cc.getIDNum());
+                    myRow.createCell(5).setCellValue(currentClassCount[1]);
                     switch (cc.getPriority()) {
                         case 1:
-                            myRow.createCell(5).setCellValue("MODERATOR");
+                            myRow.createCell(6).setCellValue("MODERATOR");
                             break;
                         case 2:
-                            myRow.createCell(5).setCellValue("modPriority");
+                            myRow.createCell(6).setCellValue("modPriority");
                             break;
                         case 3:
-                            myRow.createCell(5).setCellValue("Lotteried Out");
+                            myRow.createCell(6).setCellValue("Lotteried Out");
                             break;
                         case 4:
-                            myRow.createCell(5).setCellValue("New Member");
+                            myRow.createCell(6).setCellValue("New Member");
                             break;
                         case 5:
-                            myRow.createCell(5).setCellValue("Priority");
+                            myRow.createCell(6).setCellValue("Priority");
                             break;
                         case 6:
-                            myRow.createCell(5).setCellValue("None");
+                            myRow.createCell(6).setCellValue("None");
                             break;
                         case 7:
-                            myRow.createCell(5).setCellValue("Emeritus");
+                            myRow.createCell(6).setCellValue("Emeritus");
                             break;
                         default:
-                            myRow.createCell(5).setCellValue("ERROR");
+                            myRow.createCell(6).setCellValue("ERROR");
                             break;
                     }
                         
                     //if the person is accepted into the class
                     switch (cc.getStatus()) {
                     case 1:
-                        myRow.createCell(6).setCellValue("Accepted");
+                        myRow.createCell(7).setCellValue("Accepted");
                         break;
                     case 2:
                         //if the person is maxed out
-                        myRow.createCell(6).setCellValue("Maxed Out");
+                        myRow.createCell(7).setCellValue("Maxed Out");
                         break;
                     case 3:
                         //if the person is waitlisted
-                        myRow.createCell(6).setCellValue("Waitlisted");
+                        myRow.createCell(7).setCellValue("Waitlisted");
                         break;
                     case 4:
                         //if the person is emeritus accepted
-                        myRow.createCell(6).setCellValue("E Accepted");
+                        myRow.createCell(7).setCellValue("E Accepted");
                        break;
                     case 5:
                         //if the person has a time conflict
-                        myRow.createCell(6).setCellValue("Time Conflict");
+                        myRow.createCell(7).setCellValue("Time Conflict");
                         break;
                     default:
-                        myRow.createCell(6).setCellValue("ERROR");
+                        myRow.createCell(7).setCellValue("ERROR");
                         break;
                     }  
                     
@@ -393,8 +381,10 @@ public class LotteryAlgorithm {
                         currentRow.createCell(2).setCellValue(cc.getLastName());
                         currentRow.createCell(3).setCellValue(cc.getFirstName());
                         currentRow.createCell(4).setCellValue(cc.getChoiceNum());
-                        currentRow.createCell(5).setCellValue("Emeritus");
-                        currentRow.createCell(6).setCellValue(cc.getClassName());
+                        int[] theClassCount = hmClassCount.get(cc.getIDNum());
+                        currentRow.createCell(5).setCellValue(currentClassCount[1]);
+                        currentRow.createCell(6).setCellValue("Emeritus");
+                        currentRow.createCell(7).setCellValue(cc.getClassName());
                     }
                 } catch (Exception e) {
                     //add to the etc list if it already cannot be determined the status
@@ -405,38 +395,40 @@ public class LotteryAlgorithm {
                     myRow.createCell(2).setCellValue(cc.getLastName());
                     myRow.createCell(3).setCellValue(cc.getFirstName());
                     myRow.createCell(4).setCellValue(cc.getChoiceNum());
+                    int[] currentClassCount = hmClassCount.get(cc.getIDNum());
+                    myRow.createCell(5).setCellValue(currentClassCount[1]);
                     switch (cc.getPriority()) {
                         case 1:
-                            myRow.createCell(5).setCellValue("MODERATOR");
+                            myRow.createCell(6).setCellValue("MODERATOR");
                             break;
                         case 2:
-                            myRow.createCell(5).setCellValue("modPriority");
+                            myRow.createCell(6).setCellValue("modPriority");
                             break;
                         case 3:
-                            myRow.createCell(5).setCellValue("Lotteried Out");
+                            myRow.createCell(6).setCellValue("Lotteried Out");
                             break;
                         case 4:
-                            myRow.createCell(5).setCellValue("New Member");
+                            myRow.createCell(6).setCellValue("New Member");
                             break;
                         case 5: 
-                            myRow.createCell(5).setCellValue("Priority");
+                            myRow.createCell(6).setCellValue("Priority");
                             break;
                         case 6:
-                            myRow.createCell(5).setCellValue("None");
+                            myRow.createCell(6).setCellValue("None");
                             break;
                         case 7:
-                            myRow.createCell(5).setCellValue("Emeritus");
+                            myRow.createCell(6).setCellValue("Emeritus");
                             break;
                         default:
-                            myRow.createCell(5).setCellValue("ERROR");
+                            myRow.createCell(6).setCellValue("ERROR");
                             break;
                     }
-                    myRow.createCell(6).setCellValue(cc.getClassName());
+                    myRow.createCell(7).setCellValue(cc.getClassName());
                 }		
             }
 
             for (Sheet mySheet : finalWorkbook) {
-                    for (int i = 0; i < 7; i++) {
+                    for (int i = 0; i < 8; i++) {
                             mySheet.autoSizeColumn(i);
                     }
             }
@@ -452,63 +444,65 @@ public class LotteryAlgorithm {
                 theRow.createCell(2).setCellValue(cc.getLastName());
                 theRow.createCell(3).setCellValue(cc.getFirstName());
                 theRow.createCell(4).setCellValue(cc.getChoiceNum());
+                int[] myClassCount = hmClassCount.get(cc.getIDNum());
+                theRow.createCell(5).setCellValue(myClassCount[1]);
                 switch (cc.getPriority()) {
                     case 1:
-                        theRow.createCell(5).setCellValue("MODERATOR");
+                        theRow.createCell(6).setCellValue("MODERATOR");
                         break;
                     case 2:
-                        theRow.createCell(5).setCellValue("modPriority");
+                        theRow.createCell(6).setCellValue("modPriority");
                         break;
                     case 3:
-                        theRow.createCell(5).setCellValue("Lotteried Out");
+                        theRow.createCell(6).setCellValue("Lotteried Out");
                         break;
                     case 4:
-                        theRow.createCell(5).setCellValue("New Member");
+                        theRow.createCell(6).setCellValue("New Member");
                         break;
                     case 5:
-                        theRow.createCell(5).setCellValue("Priority");
+                        theRow.createCell(6).setCellValue("Priority");
                         break;
                     case 6:
-                        theRow.createCell(5).setCellValue("None");
+                        theRow.createCell(6).setCellValue("None");
                         break;
                     case 7:
-                        theRow.createCell(5).setCellValue("Emeritus");
+                        theRow.createCell(6).setCellValue("Emeritus");
                         break;
                     default:
-                        theRow.createCell(5).setCellValue("ERROR");
+                        theRow.createCell(6).setCellValue("ERROR");
                         break;
                 }
 
-                theRow.createCell(6).setCellValue(cc.getClassName());
+                theRow.createCell(7).setCellValue(cc.getClassName());
 
                 //if the person is accepted into the class
                 switch (cc.getStatus()) {
                     case 1:
-                        theRow.createCell(7).setCellValue("Accepted");
+                        theRow.createCell(8).setCellValue("Accepted");
                         break;
                     case 2:
                         //if the person is maxed out
-                        theRow.createCell(7).setCellValue("Maxed Out");
+                        theRow.createCell(8).setCellValue("Maxed Out");
                         break;
                     case 3:
                         //if the person is waitlisted
-                        theRow.createCell(7).setCellValue("Waitlisted");
+                        theRow.createCell(8).setCellValue("Waitlisted");
                         break;
                     case 4:
                         //if there is an emeritus
-                        theRow.createCell(7).setCellValue("E Accepted");
+                        theRow.createCell(8).setCellValue("E Accepted");
                         break;
                     case 5:
                         //if there is a time conflict
-                        theRow.createCell(7).setCellValue("Time Conflict");
+                        theRow.createCell(8).setCellValue("Time Conflict");
                         break;
                     default:
-                        theRow.createCell(7).setCellValue("ERROR");
+                        theRow.createCell(8).setCellValue("ERROR");
                         break;
                 }
             }
 
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 9; i++) {
                 finalWBSheet.autoSizeColumn(i);
             }
 
